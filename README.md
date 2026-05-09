@@ -2,21 +2,51 @@
 
 A starter template for developing Zenso widgets and plugins for e-ink displays.
 
-It includes a simple project setup for local preview, rapid iteration, and building reusable template-based integrations for Zenso devices.
-## Development
+## Features
+
+- Liquid template rendering with Vite
+- Mock data for local development
+- GitHub Actions CI/CD for releases
+
+## Project Structure
+
+```
+├── src/              # Source code
+├── assets/           # Assets (images, thubnail)
+├── dev/              # Mock data and pages
+├── dist/             # Build output
+├── manifest.json     # Plugin configuration
+└── vite.config.js    # Build settings
+```
+
+## Getting Started
 
 ### Prerequisites
-
 ```bash
 npm install
 ```
 
-### Local Preview
-
-Run the preview server to test templates locally:
-
+### Development
 ```bash
-npm run preview
+npm run dev      # Start dev server with hot reload
+npm run preview  # Preview production build
 ```
 
-Open http://localhost:4173/ to see rendered templates.
+### Build
+```bash
+npm run build   # Create production build in dist/
+```
+
+## Configuration
+
+### manifest.json
+Configure your plugin's metadata (id, name, description, schema_version, etc.).
+
+### Mock Data
+Add or edit mock data in `dev/mock/*.json` to test templates locally.
+
+### Template Variables
+Use Liquid syntax (`{{ variable }}`, `{% render %}`) in your templates.
+
+For Liquid template syntax, see the [official Liquid tutorial](https://liquidjs.com/tutorials/intro-to-liquid.html).
+

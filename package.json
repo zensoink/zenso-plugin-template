@@ -6,8 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
-    "preview": "vite build && vite preview"
+    "build": "vite build"
   },
   "homepage": "https://github.com/zensoink/zenso-plugin-examples#readme",
   "bugs": {
@@ -20,6 +19,8 @@
   "license": "MIT",
   "devDependencies": {
     "@vituum/vite-plugin-liquid": "^2",
+    "vite": "^8.0.11",
+    "vite-plugin-static-copy": "^4.1.0",
     "vituum": "^2.0.2"
   }
 }
