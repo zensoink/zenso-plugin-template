@@ -1,0 +1,25 @@
+{
+  "name": "zenso-plugin-example",
+  "description": "Example plugin and starter for Zenso e-ink displays",
+  "version": "0.0.0",
+  "author": "zenso",
+  "private": true,
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite build && vite preview"
+  },
+  "homepage": "https://github.com/zensoink/zenso-plugin-examples#readme",
+  "bugs": {
+    "url": "https://github.com/zensoink/zenso-plugin-examples/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zensoink/zenso-plugin-examples.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@vituum/vite-plugin-liquid": "^2",
+    "vituum": "^2.0.2"
+  }
+}
