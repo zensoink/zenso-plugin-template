@@ -50,3 +50,14 @@ Use Liquid syntax (`{{ variable }}`, `{% render %}`) in your templates.
 
 For Liquid template syntax, see the [official Liquid tutorial](https://liquidjs.com/tutorials/intro-to-liquid.html).
 
+## Deployment
+
+Trigger a release by creating a git tag:
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+## License
+
+MIT
