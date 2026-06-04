@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import vituum from 'vituum'
 import liquid from '@vituum/vite-plugin-liquid'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
+import manifest from './manifest.json' with { type: 'json' }
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -28,7 +29,8 @@ export default defineConfig(({ command }) => {
       }),
       liquid({
         root: paths.src,
-        data: [`${paths.dev}/mock/*.json`, './manifest.json'],
+        data: [`${paths.dev}/mock/*.json`],
+        globals: { manifest },
       })
     )
   }
