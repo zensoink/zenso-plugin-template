@@ -1,7 +1,7 @@
 {
   "name": "zenso-plugin-example",
   "description": "Example plugin and starter for Zenso e-ink displays",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "author": "zenso",
   "private": true,
   "scripts": {
