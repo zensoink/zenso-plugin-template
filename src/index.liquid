@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
-        <link rel="stylesheet" href="/src/main.css" />
-        <title>{{ name }}</title>
+        <link rel="stylesheet" href="{{ 'main.css' | asset_url }}" />
+        <title>{{ manifest.name }}</title>
     </head>
     <body>
         {% render './components/logo.liquid' %}

@@ -1,12 +1,15 @@
 {
   "name": "zenso-plugin-example",
   "description": "Example plugin and starter for Zenso e-ink displays",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "zenso",
   "private": true,
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build"
+    "prebuild": "rm -rf ./dist/*",
+    "build": "vite build",
+    "postbuild": "npm run zip:pack",
+    "zip:pack": "cd dist && zip -r plugin.zip ."
   },
   "homepage": "https://github.com/zensoink/zenso-plugin-examples#readme",
   "bugs": {
