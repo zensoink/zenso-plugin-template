@@ -1,5 +1,16 @@
 @import "styles/typography.css";
 
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 1rem
+}
+
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -10,7 +21,7 @@
     font: inherit;
 }
 
-img, picture,svg {
+img, picture, svg {
     display: block;
     max-width: 100%;
     height: auto;

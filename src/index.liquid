@@ -6,19 +6,8 @@
         <link rel="stylesheet" href="/src/main.css" />
         <title>{{ name }}</title>
     </head>
-    <body
-            style="
-              margin: 0;
-              min-height: 100vh;
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: center;
-              text-align: center;
-              gap: 1rem
-            "
-    >
+    <body>
         {% render './components/logo.liquid' %}
-        <strong>{{ description }}</strong>
+        <strong>{{ manifest.description }}</strong>
     </body>
 </html>
