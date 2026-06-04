@@ -6,7 +6,10 @@
   "private": true,
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build"
+    "prebuild": "rm -rf ./dist/*",
+    "build": "vite build",
+    "postbuild": "npm run zip:pack",
+    "zip:pack": "cd dist && zip -r plugin.zip ."
   },
   "homepage": "https://github.com/zensoink/zenso-plugin-examples#readme",
   "bugs": {

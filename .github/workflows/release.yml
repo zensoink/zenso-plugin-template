@@ -33,9 +33,7 @@ jobs:
         run: npm run build
 
       - name: Pack build
-        run: |
-          cd dist
-          zip -r plugin.zip .
+        run: npm run zip:pack
 
       - name: Generate checksum
         run: sha256sum dist/plugin.zip > dist/plugin.zip.sha256
