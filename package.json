@@ -1,29 +1,18 @@
 {
-  "name": "zenso-plugin-example",
-  "description": "Example plugin and starter for Zenso e-ink displays",
-  "version": "0.0.2",
-  "author": "zenso",
-  "private": true,
+  "name": "zenso-plugin-template",
+  "version": "1.0.0",
+  "description": "zenso.ink Plugin Template",
+  "author": "zenso.ink",
+  "type": "module",
   "scripts": {
-    "dev": "vite dev",
-    "prebuild": "rm -rf ./dist/*",
-    "build": "vite build",
-    "postbuild": "npm run zip:pack",
-    "zip:pack": "cd dist && zip -r plugin.zip ."
+    "dev": "vite",
+    "build": "vite build"
   },
-  "homepage": "https://github.com/zensoink/zenso-plugin-examples#readme",
-  "bugs": {
-    "url": "https://github.com/zensoink/zenso-plugin-examples/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/zensoink/zenso-plugin-examples.git"
-  },
-  "license": "MIT",
   "devDependencies": {
-    "@vituum/vite-plugin-liquid": "^2",
-    "vite": "^8.0.11",
-    "vite-plugin-static-copy": "^4.1.0",
-    "vituum": "^2.0.2"
+    "@types/node": "^26.5.0",
+    "liquidjs": "^10.10.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.4.21",
+    "vite-plugin-zip-pack": "^1.2.3"
   }
 }

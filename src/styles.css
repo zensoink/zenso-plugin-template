@@ -1,0 +1,63 @@
+body {
+    width: 800px;
+    height: 480px;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.plugin-container {
+    background: #ffffff;
+    border: 2px solid #000000;
+    padding: 2rem;
+    border-radius: 4px;
+    width: 600px;
+    text-align: center;
+}
+
+h1 {
+    color: #000000;
+    margin-top: 0;
+    font-size: 2rem;
+}
+
+.plugin-logo {
+    display: block;
+    max-width: 240px;
+    height: auto;
+    margin: 0 auto 1rem;
+}
+
+.greeting {
+    font-size: 1.2rem;
+    color: #333333;
+}
+
+.interactive-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #000000;
+}
+
+button {
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+#click-counter {
+    display: inline-block;
+    margin-left: 10px;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
