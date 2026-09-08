@@ -26,7 +26,10 @@
     "id": "zenso-plugin-starter",
     "name": "zenso-plugin-template",
     "version": "1.0.0",
-    "author": "Konrad Stępień",
+    "author": {
+      "name": "zenso.ink",
+      "url": "https://zenso.ink"
+    },
     "description": "zenso.ink Plugin Template"
   },
   "config": {

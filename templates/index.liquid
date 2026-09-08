@@ -4,20 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=800, height=480, initial-scale=1.0">
     <title>{{ plugin.plugin_name }}</title>
-    <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
     <div class="plugin-container">
         <img class="plugin-logo" src="{{ 'assets/logo.png' | asset_url }}" alt="{{ plugin.name }}">
         <h1>{{ plugin.plugin_name }}</h1>
         <p class="greeting">{{ plugin.description }}</p>
-        <p>Autor: <strong>{{ plugin.author }}</strong></p>
+        <p>Autor: <strong>{{ plugin.author.name }}</strong></p>
 
         <div class="interactive-section">
             <button id="action-btn">Kliknij mnie (Test JS)</button>
             <span id="click-counter">0</span>
         </div>
     </div>
-    <script type="module" src="assets/main.js"></script>
 </body>
 </html>

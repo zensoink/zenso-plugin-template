@@ -5,6 +5,22 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const engine = new Liquid();
+// ponytail: identity mapping matches the relative-path layout used in dist
+engine.registerFilter('asset_url', (value: any) => String(value));
+
+// Single place to configure asset paths: dev serves source files with HMR, build uses bundled output
+const DEV_STYLES_HREF = '/src/styles.css';
+const PROD_STYLES_HREF = 'assets/styles.css';
+const DEV_MAIN_SRC = '/src/main.ts';
+const PROD_MAIN_SRC = 'assets/main.js';
+
+function injectHeadAssets(html: string, opts: { stylesHref: string; mainSrc: string | null }): string {
+    const tags = [`<link rel="stylesheet" href="${opts.stylesHref}">`];
+    if (opts.mainSrc) tags.push(`<script type="module" src="${opts.mainSrc}"></script>`);
+    const injection = tags.join('\n');
+    if (html.includes('</head>')) return html.replace('</head>', `${injection}\n</head>`);
+    return `${html}\n${injection}`;
+}
 
 function hasScriptCapability(): boolean {
     try {
@@ -171,6 +187,47 @@ function syncMockData() {
     }
 }
 
+function buildManifestJson(): Record<string, any> {
+    const zensoConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'zenso.config.json'), 'utf-8'));
+    const pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'package.json'), 'utf-8'));
+    return {
+        $schema: 'https://schemas.zenso.ink/v1/plugin-manifest.schema.json',
+        id: zensoConfig.id,
+        name: pkg.name,
+        thumbnail: zensoConfig.thumbnail,
+        description: pkg.description,
+        schema_version: zensoConfig.schema_version,
+        version: pkg.version,
+        core_min: zensoConfig.core_min,
+        license: pkg.license,
+        capabilities: zensoConfig.capabilities,
+        author: pkg.author,
+        config_schema: zensoConfig.config_schema,
+        data_sources: zensoConfig.data_sources
+    };
+}
+
+function zensoBuildPlugin() {
+    return {
+        name: 'zenso-plugin-build',
+        generateBundle(this: any) {
+            this.emitFile({
+                type: 'asset',
+                fileName: 'manifest.json',
+                source: JSON.stringify(buildManifestJson(), null, 2)
+            });
+            this.emitFile({
+                type: 'asset',
+                fileName: 'index.liquid',
+                source: injectHeadAssets(
+                    fs.readFileSync(path.resolve(__dirname, 'templates/index.liquid'), 'utf-8'),
+                    { stylesHref: PROD_STYLES_HREF, mainSrc: ALLOW_JAVASCRIPT ? PROD_MAIN_SRC : null }
+                )
+            });
+        }
+    };
+}
+
 syncMockData();
 
 function liquidDevPlugin() {
@@ -180,14 +237,15 @@ function liquidDevPlugin() {
             const templatesDir = path.resolve(__dirname, 'templates');
             const mockDataPath = path.resolve(__dirname, 'mock-data.json');
             const configPath = path.resolve(__dirname, 'zenso.config.json');
+            const pkgPath = path.resolve(__dirname, 'package.json');
 
-            server.watcher.add([templatesDir, mockDataPath, configPath]);
+            server.watcher.add([templatesDir, mockDataPath, configPath, pkgPath]);
 
             server.watcher.on('change', (file: string) => {
-                if (file === configPath) {
+                if (file === configPath || file === pkgPath) {
                     syncMockData();
                 }
-                if (file.startsWith(templatesDir) || file === mockDataPath || file === configPath) {
+                if (file.startsWith(templatesDir) || file === mockDataPath || file === configPath || file === pkgPath) {
                     server.ws.send({ type: 'full-reload' });
                 }
             });
@@ -203,16 +261,14 @@ function liquidDevPlugin() {
                             ? JSON.parse(fs.readFileSync(mockDataPath, 'utf-8'))
                             : {};
 
-                        template = template.replace(
-                            'href="assets/styles.css"',
-                            'href="/src/styles.css"'
-                        );
+                        template = injectHeadAssets(template, {
+                            stylesHref: DEV_STYLES_HREF,
+                            mainSrc: hasScriptCapability() && fs.existsSync(path.resolve(__dirname, 'src/main.ts'))
+                                ? DEV_MAIN_SRC
+                                : null
+                        });
 
                         let devScripts = `<script type="module" src="/@vite/client"></script>`;
-
-                        if (hasScriptCapability() && fs.existsSync(path.resolve(__dirname, 'src/main.ts'))) {
-                            devScripts += `\n<script type="module" src="/src/main.ts"></script>`;
-                        }
 
                         if (template.includes('</head>')) {
                             template = template.replace('</head>', `${devScripts}\n</head>`);
@@ -238,6 +294,7 @@ function liquidDevPlugin() {
 export default defineConfig({
     plugins: [
         liquidDevPlugin(),
+        zensoBuildPlugin(),
         zipPack({
             inDir: 'dist',
             outDir: './',
@@ -249,7 +306,6 @@ export default defineConfig({
         emptyOutDir: true,
         rollupOptions: {
             input: {
-                template: 'templates/index.liquid',
                 styles: 'src/styles.css',
                 ...(ALLOW_JAVASCRIPT ? { main: 'src/main.ts' } : {})
             },

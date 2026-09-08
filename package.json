@@ -1,8 +1,12 @@
 {
   "name": "zenso-plugin-template",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "zenso.ink Plugin Template",
-  "author": "zenso.ink",
+  "author": {
+    "name": "zenso.ink",
+    "url": "https://zenso.ink"
+  },
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
