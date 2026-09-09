@@ -28,10 +28,9 @@ There is no client-side interactivity: the output is a static image.
 ├── public/assets/    # Static files shipped verbatim (e.g. assets/logo.png)
 ├── public/favicon.ico # Plugin-list icon (referenced from the template head)
 ├── mock/             # Dev-only mock layers: zenso.json (checked-in base) + plugin.json (sparse overrides, git-ignored)
-├── tools/zenso/      # Plugin toolkit source (dev server, build emit, mock resolution); extracted to an npm package later
+├── vite.config.ts    # Just `plugins: [zensoPlugin()]` (from `@zenso/zenso-vite-plugin`); user `build` values merge over plugin defaults
 ├── zenso.config.json # Plugin contract source: id, capabilities, config_schema, data_sources
 ├── package.json      # Plugin metadata source: name, version, author, description, license
-├── vite.config.ts    # Just `plugins: [zensoPlugin()]`; user `build` values merge over plugin defaults
 └── dist/             # Build output (git-ignored); plugin.zip emitted next to it
 ```
 

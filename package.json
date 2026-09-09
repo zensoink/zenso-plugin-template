@@ -14,9 +14,8 @@
   },
   "devDependencies": {
     "@types/node": "^26.5.0",
-    "liquidjs": "^10.10.0",
+    "@zenso/zenso-vite-plugin": "github:zensoink/zenso-vite-plugin",
     "typescript": "^5.2.2",
-    "vite": "^5.4.21",
-    "vite-plugin-zip-pack": "^1.2.3"
+    "vite": "^6.0.0"
   }
 }
