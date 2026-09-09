@@ -53,12 +53,23 @@ export function hasScriptCapability(): boolean {
  * | `license`                                    |                    |
  *
  * @returns The manifest object, ready for `JSON.stringify`.
+ * @throws When `package.json` lacks a non-empty `name` or a SemVer
+ * `version` — both are merged here and required by the backend validator,
+ * so the build fails fast instead of producing a ZIP the upload rejects.
  * @remarks Keys are allowlisted explicitly, so tooling keys added to
  * `zenso.config.json` in the future can never leak to the backend.
  */
 export function buildManifestJson(): Record<string, any> {
     const zensoConfig = readZensoConfig();
     const pkg = readPackageJson();
+    // ponytail: mirror only what the backend requires of merged keys (name non-empty,
+    // version SemVer); full-manifest validation stays the backend's job
+    if (typeof pkg.name !== 'string' || pkg.name.length === 0) {
+        throw new Error('zenso: package.json must provide a non-empty "name" (merged into dist/manifest.json, required by the backend)');
+    }
+    if (typeof pkg.version !== 'string' || !/^\d+\.\d+\.\d+$/.test(pkg.version)) {
+        throw new Error('zenso: package.json must provide a SemVer "version" like "1.2.3" (merged into dist/manifest.json, required by the backend)');
+    }
     return {
         $schema: 'https://schemas.zenso.ink/v1/plugin-manifest.schema.json',
         id: zensoConfig.id,

@@ -26,6 +26,7 @@ There is no client-side interactivity: the output is a static image.
 ```
 ├── src/              # Liquid template (index.liquid), entry CSS (styles.css), entry JS (main.ts, script capability only)
 ├── public/assets/    # Static files shipped verbatim (e.g. assets/logo.png)
+├── public/favicon.ico # Plugin-list icon (referenced from the template head)
 ├── mock/             # Dev-only mock layers: zenso.json (checked-in base) + plugin.json (sparse overrides, git-ignored)
 ├── tools/zenso/      # Plugin toolkit source (dev server, build emit, mock resolution); extracted to an npm package later
 ├── zenso.config.json # Plugin contract source: id, capabilities, config_schema, data_sources
@@ -173,6 +174,15 @@ Available in every template (the resolved mock context mirrors it locally):
 The only registered Liquid filter is `asset_url` (used for static files,
 e.g. `{{ 'assets/logo.png' | asset_url }}`).
 For Liquid syntax see the [official Liquid tutorial](https://liquidjs.com/tutorials/intro-to-liquid.html).
+
+### Plugin icon
+
+`public/favicon.ico` is the plugin's icon: it ships verbatim in the ZIP and is
+loaded into the plugin list. It is also referenced from the template head
+(`<link href="{{ 'favicon.ico' | asset_url }}" rel="icon">`), so the dev page
+and the screenshot share the same icon. Replace the file with your own icon —
+keep the `favicon.ico` name and location. (The manifest `thumbnail` is a
+separate, larger preview image.)
 
 ## JavaScript (opt-in)
 
