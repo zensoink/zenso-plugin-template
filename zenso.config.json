@@ -1,6 +1,6 @@
 {
-  "$schema": "https://schemas.zenso.ink/v1/zenso.schema.json",
-  "id": "zenso-plugin-starter",
+  "$schema": "tools/zenso/zenso.schema.json",
+  "id": "zenso/plugin-starter",
   "thumbnail": "assets/logo.png",
   "schema_version": 1,
   "core_min": "0.0.0",
@@ -9,49 +9,7 @@
   ],
   "config_schema": {
     "type": "object",
-    "required": ["calendar_feeds"],
-    "properties": {
-      "view": {
-        "type": "string",
-        "enum": ["list", "month", "week", "day"],
-        "default": "list",
-        "description": "Calendar layout: list (FullCalendar list view), month, week, or day grid"
-      },
-      "days_ahead": {
-        "type": "number",
-        "minimum": 1,
-        "maximum": 60,
-        "default": 14,
-        "description": "How many days ahead to show events"
-      },
-      "time_format": {
-        "type": "string",
-        "enum": ["24h", "12h"],
-        "default": "24h",
-        "description": "Hour format for time axis and event times: 24-hour (06:00) or 12-hour (6am)"
-      },
-      "calendar_feeds": {
-        "type": "array",
-        "description": "ICS feeds. Google and Apple don't share feed color, so pick one per feed.",
-        "items": {
-          "type": "object",
-          "required": ["url", "color"],
-          "properties": {
-            "url": { "type": "string", "format": "uri" },
-            "color": { "type": "string", "format": "color", "default": "#3b82f6" }
-          }
-        }
-      }
-    }
-  },
-  "data_sources": [
-    {
-      "id": "calendar",
-      "type": "ics",
-      "config": {
-        "urls_field": "calendar_feeds",
-        "days_ahead_field": "days_ahead"
-      }
-    }
-  ]
+    "required": [],
+    "properties":{}
+  }
 }

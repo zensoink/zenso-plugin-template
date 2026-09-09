@@ -1,0 +1,23 @@
+{
+  "user": {
+    "id": "user_123",
+    "name": "Tytus Bomba",
+    "first_name": "Tytus",
+    "locale": "pl-PL",
+    "language": "pl",
+    "time_zone_iana": "Europe/Warsaw",
+    "utc_offset": 7200
+  },
+  "device": {
+    "id": "spectra-13.3",
+    "friendly_id": "AB12CD",
+    "width": 1600,
+    "height": 1200,
+    "orientation": "landscape"
+  },
+  "system": {
+    "timestamp_utc": 1778317800,
+    "core_version": "0.0.0",
+    "firmware_version": "0.0.0"
+  }
+}

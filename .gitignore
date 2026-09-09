@@ -48,3 +48,6 @@ Thumbs.db
 # Local env & scratch files
 .env
 .slim/
+
+# Generated plugin mock context (auto-created from zenso.config.json + package.json)
+/mock/plugin.json

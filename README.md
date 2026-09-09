@@ -2,7 +2,7 @@
 
 A starter template for developing Zenso widgets and plugins for e-ink displays.
 
-A plugin is a [Liquid](https://liquidjs.com/tutorials/intro-to-liquid.html) template (`templates/index.liquid`)
+A plugin is a [Liquid](https://liquidjs.com/tutorials/intro-to-liquid.html) template (`src/index.liquid`)
 plus a `manifest.json` contract. The Zenso backend renders it server-side — Liquid → HTML →
 headless-Chromium screenshot → PNG → dithered 4bpp image — and pushes the result to the device.
 There is no client-side interactivity: the output is a static image.
@@ -16,20 +16,21 @@ There is no client-side interactivity: the output is a static image.
 - `config_schema` contract for per-instance plugin settings
 - `data_sources` contract for server-side data fetching (e.g. ICS feeds)
 - Optional `script` capability: bundled JS rendered before screenshot
-- `mock-data.json` for local development without backend access (auto-synced)
+- Layered mocks for local development without backend access
+  (`mock/zenso.json` + `mock/plugin.json` + inline `mock:` option, dev-only)
 - E-ink-friendly CSS entry (`src/styles.css`)
 - GitHub Actions CI/CD: signed releases (`plugin.zip` + sha256 + Cosign bundle)
 
 ## Project Structure
 
 ```
-├── templates/        # Liquid template (index.liquid)
-├── src/              # Entry CSS (styles.css), entry JS (main.ts, script capability only)
+├── src/              # Liquid template (index.liquid), entry CSS (styles.css), entry JS (main.ts, script capability only)
 ├── public/assets/    # Static files shipped verbatim (e.g. assets/logo.png)
-├── mock-data.json    # Mock template context for local development (auto-synced, git-ignored scratch allowed)
+├── mock/             # Dev-only mock layers: zenso.json (checked-in base) + plugin.json (sparse overrides, git-ignored)
+├── tools/zenso/      # Plugin toolkit source (dev server, build emit, mock resolution); extracted to an npm package later
 ├── zenso.config.json # Plugin contract source: id, capabilities, config_schema, data_sources
 ├── package.json      # Plugin metadata source: name, version, author, description, license
-├── vite.config.ts    # Dev + build settings (only `dev` and `build` scripts)
+├── vite.config.ts    # Just `plugins: [zensoPlugin()]`; user `build` values merge over plugin defaults
 └── dist/             # Build output (git-ignored); plugin.zip emitted next to it
 ```
 
@@ -49,31 +50,53 @@ npm install
 npm run dev    # Start dev server with hot reload (mock data)
 ```
 
-`/` renders `templates/index.liquid` with the context from `mock-data.json`.
+`/` renders `src/index.liquid` with the resolved mock context (see below).
 CSS (`src/styles.css`) and JS (`src/main.ts`, script capability only) are injected
 automatically — dev uses `/src/*` paths with HMR, production builds use `assets/*`.
-Templates, mock data, `zenso.config.json`, and `package.json` are watched;
-editing config re-syncs the mock and triggers a full reload.
+Template, mock files, `zenso.config.json`, and `package.json` are watched;
+editing config re-syncs the sparse mock overrides and triggers a full reload.
 
 ### Mock data
 
-`mock-data.json` mirrors the production template context:
+The dev context resolves at render time by layering (highest wins):
 
-```json
-{
-  "zenso": { "user": {}, "device": {}, "system": {} },
-  "plugin": { "id": "...", "name": "...", "version": "..." },
-  "config": {},
-  "data": {}
-}
+| Layer | Source |
+| ----- | ------ |
+| Inline `mock:` option | `zensoPlugin({ mock: {...} })` — object or spread of imported JSONs |
+| `mock/plugin.json` | Sparse `plugin`/`config`/`data` overrides (git-ignored, auto-synced) |
+| `mock/zenso.json` | Checked-in neutral `zenso` scope (`user`/`device`/`system`) |
+| Derived defaults | `plugin` identity from `package.json`, `config` from `config_schema`, `data` stubs from `data_sources` |
+
+```ts
+// vite.config.ts — compose extra mocks with plain imports and spread
+import zensoMock from './mock/zenso.json';
+import pluginMock from './mock/plugin.json';
+import realMock from './mock/real.json';
+
+zensoPlugin({ mock: { ...zensoMock, ...pluginMock, ...realMock } })
 ```
 
-It is auto-synced on dev/build from `zenso.config.json` (config defaults from
-`config_schema` properties, data stubs from `data_sources`) and `package.json`
-(plugin name/version/author/description), plus built-in `zenso` device/user defaults.
-Sync only fills in missing keys — your edits are preserved. The `data.<id>` entries
-are local `{type, config}` stubs; the backend expands them into real fetched data
-in production.
+Top-level `user`/`device`/`system` keys fold into the `zenso` scope, so
+`{...zensoMock}` spreads compose. Sync only fills missing keys in
+`mock/plugin.json` — your overrides are preserved and the `zenso` scope is
+never written there. `zenso.system.timestamp_utc` is stamped with the current
+time on every render (the backend does the same in production), so the clock
+is always live; `mock/zenso.json` on disk keeps its static fixture value. The `data.<id>` entries are local `{type, config}`
+stubs; the backend expands them into real fetched data in production.
+Mocks are dev-only: `npm run build` never reads or writes `mock/`.
+
+### Plugin options
+
+`zensoPlugin()` takes three optional flags (defaults preserve template behavior):
+
+| Option | Default | Meaning |
+| ------ | ------- | ------- |
+| `generateMockData` | `true` | Derive config-based layers + sync sparse `mock/plugin.json` (dev only). `false` renders files + inline data only. |
+| `mock` | — | Inline mock data, highest-precedence layer (see above). |
+| `zip` | `true` | Pack `dist/` into `plugin.zip` after build. Object overrides zipPack options, `false` disables. |
+
+Build defaults (`outDir`, rollup inputs/outputs) come from the plugin's
+`config()` hook — your own `build` values in `vite.config.ts` merge over them.
 
 ### Build
 
@@ -101,24 +124,12 @@ it is generated at build:
 ```json
 "config_schema": {
   "type": "object",
-  "required": ["calendar_feeds"],
   "properties": {
-    "view": {
-      "type": "string", "enum": ["list", "month", "week", "day"], "default": "list"
+    "title": {
+      "type": "string", "default": "Hello"
     },
-    "days_ahead": {
-      "type": "number", "minimum": 1, "maximum": 60, "default": 14
-    },
-    "calendar_feeds": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["url", "color"],
-        "properties": {
-          "url": { "type": "string", "format": "uri" },
-          "color": { "type": "string", "format": "color", "default": "#3b82f6" }
-        }
-      }
+    "show_footer": {
+      "type": "boolean", "default": true
     }
   }
 }
@@ -134,20 +145,23 @@ Declare what the backend should fetch and inject into your template context:
 ```json
 "data_sources": [
   {
-    "id": "calendar",
+    "id": "events",
     "type": "ics",
-    "config": { "urls_field": "calendar_feeds", "days_ahead_field": "days_ahead" }
+    "config": { "urls_field": "feed_urls", "days_ahead_field": "days_ahead" }
   }
 ]
 ```
 
-The backend fetches the feeds from the instance's settings and injects the result
-(e.g. `data.calendar`) into the template. Locally, `data.calendar` is just the
-declared stub — shape your template against the backend's documented payload.
+The backend fetches the declared sources from the instance's settings and
+injects the result (e.g. `data.events`) into the template. Locally,
+`data.events` is just the declared stub — shape your template against the
+backend's documented payload. Supported source types (e.g. `ics`) and their
+`config` keys are defined by the backend; feed URLs themselves come from the
+plugin instance settings (`config`), not from this file.
 
 ### Template context
 
-Available in every template (keys of `mock-data.json`):
+Available in every template (the resolved mock context mirrors it locally):
 
 | Variable | Source |
 | -------- | ------ |
@@ -160,18 +174,11 @@ The only registered Liquid filter is `asset_url` (used for static files,
 e.g. `{{ 'assets/logo.png' | asset_url }}`).
 For Liquid syntax see the [official Liquid tutorial](https://liquidjs.com/tutorials/intro-to-liquid.html).
 
-### Getting an ICS feed URL (example source)
-
-**Google Calendar:** calendar Settings → *Integrate calendar* → copy the
-*Secret address in iCal format* URL.
-
-**Apple iCloud:** share the calendar as *Public Calendar*, copy the public `.ics` URL.
-Note: iCloud feeds can lag several minutes behind edits.
-
 ## JavaScript (opt-in)
 
 Pure-Liquid plugins need no JS — delete `src/main.ts` and drop `"script"` from
-`capabilities`. If you need render-time computation (charts, layouts):
+`capabilities`. If you need render-time computation (charts, layouts, locale
+formatting — the starter formats the device time from the template context):
 
 1. Keep `"capabilities": ["script"]` in `zenso.config.json`.
 2. Write `src/main.ts` — it is bundled to `assets/main.js` and injected as

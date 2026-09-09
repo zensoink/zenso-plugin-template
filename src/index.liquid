@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width={{ zenso.device.width }}, height={{ zenso.device.height }}, initial-scale=1.0">
+    <title>{{ plugin.name }}</title>
+</head>
+<body>
+<div class="plugin-container">
+    <img class="plugin-logo" src="{{ 'assets/logo.png' | asset_url }}" alt="{{ plugin.name }}">
+    <h1>{{ plugin.name }}</h1>
+    <p class="greeting">{{ plugin.description }}</p>
+    <p>Author: <strong>{{ plugin.author.name }}</strong></p>
+
+    <div class="time-section">
+        <svg id="device-clock" viewBox="0 0 120 120" role="img" aria-label="Device time">
+            <circle class="clock-face" cx="60" cy="60" r="56" />
+            <g id="clock-ticks"></g>
+            <line id="hour-hand" class="clock-hand hour" x1="60" y1="60" x2="60" y2="32" />
+            <line id="minute-hand" class="clock-hand minute" x1="60" y1="60" x2="60" y2="18" />
+            <line id="second-hand" class="clock-hand second" x1="60" y1="68" x2="60" y2="16" />
+            <circle class="clock-pin" cx="60" cy="60" r="3" />
+        </svg>
+        <p>Device time:</p>
+        <time id="device-time"
+            data-timestamp="{{ zenso.system.timestamp_utc }}"
+            data-locale="{{ zenso.user.locale }}"
+            data-time-zone="{{ zenso.user.time_zone_iana }}">…</time>
+    </div>
+</div>
+</body>
+</html>

@@ -39,25 +39,62 @@ h1 {
     color: #333333;
 }
 
-.interactive-section {
+.time-section {
     margin-top: 1.5rem;
     padding-top: 1.5rem;
     border-top: 1px solid #000000;
 }
 
-button {
-    background-color: #000000;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 2px;
-    cursor: pointer;
+.time-section p {
+    margin: 0 0 0.5rem;
     font-size: 1rem;
+    color: #333333;
 }
 
-#click-counter {
-    display: inline-block;
-    margin-left: 10px;
+#device-clock {
+    width: 160px;
+    height: 160px;
+    margin-bottom: 0.75rem;
+}
+
+.clock-face {
+    fill: #ffffff;
+    stroke: #000000;
+    stroke-width: 3;
+}
+
+.clock-tick {
+    stroke: #000000;
+    stroke-width: 1.5;
+}
+
+.clock-tick.major {
+    stroke-width: 3;
+}
+
+.clock-hand {
+    stroke: #000000;
+    stroke-linecap: round;
+}
+
+.clock-hand.hour {
+    stroke-width: 5;
+}
+
+.clock-hand.minute {
+    stroke-width: 3;
+}
+
+.clock-hand.second {
+    stroke-width: 1.5;
+}
+
+.clock-pin {
+    fill: #000000;
+}
+
+#device-time {
+    font-size: 1.4rem;
     font-weight: bold;
-    font-size: 1.2rem;
+    font-variant-numeric: tabular-nums;
 }
