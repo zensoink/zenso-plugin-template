@@ -9,6 +9,8 @@
 /out-tsc
 /bazel-out
 .plugin.zip
+/plugin.zip
+/plugin.zip.*
 
 # Node
 /node_modules
