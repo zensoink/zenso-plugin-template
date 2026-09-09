@@ -1,5 +1,5 @@
 {
-  "$schema": "tools/zenso/zenso.schema.json",
+  "$schema": "https://schemas.zenso.ink/v1/plugin-manifest.schema.json",
   "id": "zenso/plugin-starter",
   "thumbnail": "assets/logo.png",
   "schema_version": 1,
