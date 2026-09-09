@@ -9,10 +9,10 @@
     "utc_offset": 7200
   },
   "device": {
-    "id": "spectra-13.3",
+    "id": "spectra-7.3",
     "friendly_id": "AB12CD",
-    "width": 1600,
-    "height": 1200,
+    "width": 800,
+    "height": 480,
     "orientation": "landscape"
   },
   "system": {
