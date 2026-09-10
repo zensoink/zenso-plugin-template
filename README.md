@@ -87,13 +87,14 @@ Mocks are dev-only: `npm run build` never reads or writes `mock/`.
 
 ### Plugin options
 
-`zensoPlugin()` takes three optional flags (defaults preserve template behavior):
+`zensoPlugin()` takes four optional flags (defaults preserve template behavior):
 
 | Option | Default | Meaning |
 | ------ | ------- | ------- |
 | `generateMockData` | `true` | Derive config-based layers + sync sparse `mock/plugin.json` (dev only). `false` renders files + inline data only. |
 | `mock` | — | Inline mock data, highest-precedence layer (see above). |
 | `zip` | `true` | Pack `dist/` into `plugin.zip` after build. Object overrides zipPack options, `false` disables. |
+| `outDir` | `'dist'` | Build output directory, also the zip input. |
 
 Build defaults (`outDir`, rollup inputs/outputs) come from the plugin's
 `config()` hook — your own `build` values in `vite.config.ts` merge over them.
@@ -106,7 +107,9 @@ npm run build   # Production build: dist/ + plugin.zip
 
 The build emits `dist/index.liquid` (template with production head assets injected),
 `dist/manifest.json` (assembled from `zenso.config.json` + `package.json`),
-bundled `dist/assets/*`, static files from `public/`, and packs it all into
+bundled `dist/assets/*`, static files from `public/`, and — when present at the
+project root — `README.md` and `LICENSE` (a missing doc logs a `[zenso]:` build
+warning and is skipped), and packs it all into
 `plugin.zip` via `vite-plugin-zip-pack`. The ZIP is what gets installed as a plugin.
 
 ## Configuration
