@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ zenso.user.language }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width={{ zenso.device.width }}, height={{ zenso.device.height }}, initial-scale=1.0">
@@ -8,10 +8,12 @@
 </head>
 <body>
 <div class="plugin-container">
-    <img class="plugin-logo" src="{{ 'assets/logo.png' | asset_url }}" alt="{{ plugin.name }}">
-    <h1>{{ plugin.name }}</h1>
-    <p class="greeting">{{ plugin.description }}</p>
-    <p>Author: <strong>{{ plugin.author.name }}</strong></p>
+    <div class="plugin-info">
+        <img class="plugin-logo" src="{{ 'assets/logo.png' | asset_url }}" alt="{{ plugin.name }}">
+        <h1>{{ plugin.name }}</h1>
+        <p class="greeting">{{ plugin.description }}</p>
+        <p>Author: <strong>{{ plugin.author.name }}</strong></p>
+    </div>
 
     <div class="time-section">
         <svg id="device-clock" viewBox="0 0 120 120" role="img" aria-label="Device time">
