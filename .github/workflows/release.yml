@@ -29,26 +29,23 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      - name: Build (emits plugin.zip via zip-pack)
         run: npm run build
 
-      - name: Pack build
-        run: npm run zip:pack
-
       - name: Generate checksum
-        run: sha256sum dist/plugin.zip > dist/plugin.zip.sha256
+        run: sha256sum plugin.zip > plugin.zip.sha256
 
       - name: Sign ZIP with Cosign
         run: |
           cosign sign-blob \
             --yes \
-            --bundle dist/plugin.zip.bundle \
-            dist/plugin.zip
+            --bundle plugin.zip.bundle \
+            plugin.zip
 
       - name: Create GitHub Release and upload assets
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/plugin.zip
-            dist/plugin.zip.sha256
-            dist/plugin.zip.bundle
+            plugin.zip
+            plugin.zip.sha256
+            plugin.zip.bundle

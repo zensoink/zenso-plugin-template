@@ -8,6 +8,9 @@
 /tmp
 /out-tsc
 /bazel-out
+.plugin.zip
+/plugin.zip
+/plugin.zip.*
 
 # Node
 /node_modules
@@ -41,3 +44,10 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Local env & scratch files
+.env
+.slim/
+
+# Generated plugin mock context (auto-created from zenso.config.json + package.json)
+/mock/plugin.json
